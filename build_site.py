@@ -72,7 +72,7 @@ def main():
     sid = shop["shop_id"]
     listings = api(f"/application/shops/{sid}/listings?state=active&limit=100&includes=Images")["results"]
     state_file = ROOT / "pins.json"
-    state = json.loads(state_file.read_text()) if state_file.exists() else []
+    state = json.loads(state_file.read_text(encoding="utf-8")) if state_file.exists() else []
     known = {p["file"] for p in state}
     now = format_datetime(datetime.now(timezone.utc))
     for l in listings:
@@ -97,7 +97,7 @@ def main():
             print("Новый пин:", name)
     active = {l["listing_id"] for l in listings}
     state = [p for p in state if p["listing_id"] in active]  # снятые с продажи товары убираем из ленты
-    state_file.write_text(json.dumps(state, ensure_ascii=False, indent=1))
+    state_file.write_text(json.dumps(state, ensure_ascii=False, indent=1), encoding="utf-8")
 
     items = "".join(
         f"<item><title>{html.escape(p['title'])}</title><link>{html.escape(p['link'])}</link>"

@@ -13,7 +13,7 @@ from PIL import Image, ImageDraw, ImageFont
 ROOT = Path(__file__).parent
 SITE = "https://1mperrat0r.github.io"
 API = "https://api.etsy.com/v3"
-KEY, SECRET, REFRESH = (os.environ[k] for k in ("ETSY_KEYSTRING", "ETSY_SHARED_SECRET", "ETSY_REFRESH_TOKEN"))
+KEY, SECRET, REFRESH = (os.environ[k].strip() for k in ("ETSY_KEYSTRING", "ETSY_SHARED_SECRET", "ETSY_REFRESH_TOKEN"))
 UA = {"User-Agent": "HustlersBag/1.0 (+https://1mperrat0r.github.io)"}
 PINS_PER_LISTING = 3  # картинки карточки №1, 2, 4 → разные пины на один товар
 

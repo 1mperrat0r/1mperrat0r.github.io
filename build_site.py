@@ -13,7 +13,7 @@ from PIL import Image, ImageDraw, ImageFont
 ROOT = Path(__file__).parent
 SITE = "https://1mperrat0r.github.io"
 API = "https://api.etsy.com/v3"
-KEY, SECRET, REFRESH = (os.environ[k].strip() for k in ("ETSY_KEYSTRING", "ETSY_SHARED_SECRET", "ETSY_REFRESH_TOKEN"))
+KEY, SECRET, REFRESH = (os.environ[k].strip().strip("\ufeff") for k in ("ETSY_KEYSTRING", "ETSY_SHARED_SECRET", "ETSY_REFRESH_TOKEN"))
 UA = {"User-Agent": "HustlersBag/1.0 (+https://1mperrat0r.github.io)"}
 PINS_PER_LISTING = 3  # картинки карточки №1, 2, 4 → разные пины на один товар
 
@@ -21,7 +21,7 @@ PINS_PER_LISTING = 3  # картинки карточки №1, 2, 4 → раз�
 def post_token():
     data = urllib.parse.urlencode({"grant_type": "refresh_token", "client_id": KEY, "refresh_token": REFRESH}).encode()
     try:
-        with urllib.request.urlopen(urllib.request.Request(f"{API}/public/oauth/token", data=data, headers=UA)) as r:
+        with urllib.request.urlopen(urllib.request.Request(f"{API}/public/oauth/token", data=data, headers={"x-api-key": f"{KEY}:{SECRET}", **UA})) as r:
             return json.load(r)["access_token"]
     except urllib.error.HTTPError as e:
         sys.exit(f"Etsy token error {e.code}: {e.read()[:300]!r}")

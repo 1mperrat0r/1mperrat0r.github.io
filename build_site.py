@@ -3,7 +3,7 @@
 Запускается GitHub Actions раз в день. Берёт АКТИВНЫЕ товары из Etsy API, для новых делает пины.
 Нужны секреты: ETSY_KEYSTRING, ETSY_SHARED_SECRET, ETSY_REFRESH_TOKEN.
 """
-import html, io, json, os, sys, textwrap, urllib.parse, urllib.request
+import html, io, json, os, sys, textwrap, urllib.error, urllib.parse, urllib.request
 from datetime import datetime, timezone
 from email.utils import format_datetime
 from pathlib import Path
@@ -20,8 +20,11 @@ PINS_PER_LISTING = 3  # картинки карточки №1, 2, 4 → раз�
 
 def post_token():
     data = urllib.parse.urlencode({"grant_type": "refresh_token", "client_id": KEY, "refresh_token": REFRESH}).encode()
-    with urllib.request.urlopen(urllib.request.Request(f"{API}/public/oauth/token", data=data, headers=UA)) as r:
-        return json.load(r)["access_token"]
+    try:
+        with urllib.request.urlopen(urllib.request.Request(f"{API}/public/oauth/token", data=data, headers=UA)) as r:
+            return json.load(r)["access_token"]
+    except urllib.error.HTTPError as e:
+        sys.exit(f"Etsy token error {e.code}: {e.read()[:300]!r}")
 
 
 TOKEN = post_token()

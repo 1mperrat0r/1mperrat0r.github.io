@@ -148,7 +148,7 @@ def main():
             f'<!doctype html><html lang="en"><head>{head}<title>{html.escape(pr["short"])} — Hustlers Bag</title>'
             f'<meta name="description" content="{html.escape(pr["desc"][:155])}">{og}</head><body>'
             f'<a class="back" href="/">&larr; All products</a><div class="pp"><div class="pics">{imgs}</div><div class="info">'
-            f'<h1>{html.escape(pr["title"])}</h1><div class="price">{pr["price"]:.2f} {pr["currency"]}</div>'
+            f'<h1>{html.escape(pr["short"])}</h1><p class="lead">{html.escape(pr["title"])}</p><div class="price">{pr["price"]:.2f} {pr["currency"]}</div>'
             f'<a class="btn" href="{html.escape(pr["etsy"])}">Buy on Etsy</a></div><div class="more">'
             f'<p class="desc">{html.escape(pr["desc"])}</p>'
             f'<a class="btn" href="{html.escape(pr["etsy"])}">Buy on Etsy</a></div></div></body></html>', encoding="utf-8")

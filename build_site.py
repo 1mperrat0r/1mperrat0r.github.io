@@ -14,12 +14,13 @@ ROOT = Path(__file__).parent
 SITE = "https://1mperrat0r.github.io"
 API = "https://api.etsy.com/v3"
 KEY, SECRET, REFRESH = (os.environ[k] for k in ("ETSY_KEYSTRING", "ETSY_SHARED_SECRET", "ETSY_REFRESH_TOKEN"))
+UA = {"User-Agent": "HustlersBag/1.0 (+https://1mperrat0r.github.io)"}
 PINS_PER_LISTING = 3  # картинки карточки №1, 2, 4 → разные пины на один товар
 
 
 def post_token():
     data = urllib.parse.urlencode({"grant_type": "refresh_token", "client_id": KEY, "refresh_token": REFRESH}).encode()
-    with urllib.request.urlopen(urllib.request.Request(f"{API}/public/oauth/token", data=data)) as r:
+    with urllib.request.urlopen(urllib.request.Request(f"{API}/public/oauth/token", data=data, headers=UA)) as r:
         return json.load(r)["access_token"]
 
 
@@ -27,7 +28,7 @@ TOKEN = post_token()
 
 
 def api(path):
-    req = urllib.request.Request(API + path, headers={"x-api-key": f"{KEY}:{SECRET}", "Authorization": f"Bearer {TOKEN}"})
+    req = urllib.request.Request(API + path, headers={"x-api-key": f"{KEY}:{SECRET}", "Authorization": f"Bearer {TOKEN}", **UA})
     with urllib.request.urlopen(req) as r:
         return json.load(r)
 
@@ -37,7 +38,7 @@ def font(name, size):
 
 
 def make_pin(img_url, title, out):
-    with urllib.request.urlopen(img_url) as r:
+    with urllib.request.urlopen(urllib.request.Request(img_url, headers=UA)) as r:
         src = Image.open(io.BytesIO(r.read())).convert("RGB")
     pin = Image.new("RGB", (1000, 1500), (244, 236, 226))
     d = ImageDraw.Draw(pin)

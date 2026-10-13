@@ -129,11 +129,12 @@ def main():
             ".g a{text-decoration:none}.g img{width:100%;border-radius:12px;box-shadow:0 10px 24px rgba(0,0,0,.12)}"
             ".g span{display:block;margin-top:8px;font-weight:600}"
             ".btn{display:inline-block;margin-top:16px;background:#1F1D1A;color:#fff;padding:14px 32px;border-radius:30px;text-decoration:none;font-weight:600}"
-            ".pp{max-width:1100px;margin:0 auto;padding:24px 16px 60px;display:grid;grid-template-columns:1fr 1fr;gap:40px}"
+            ".pp{max-width:1100px;margin:0 auto;padding:24px 16px 60px;display:grid;grid-template-columns:1fr 1fr;gap:0 40px;grid-template-areas:'pics info' 'pics desc';align-content:start}"
+            ".pp .info{grid-area:info}.pp .pics{grid-area:pics}.pp .more{grid-area:desc}"
             ".pp .pics{display:grid;gap:14px}.pp .pics img{width:100%;border-radius:12px;box-shadow:0 10px 24px rgba(0,0,0,.12)}"
             ".pp h1{font-size:34px;line-height:1.15}.price{font-size:28px;font-weight:700;color:#C8553D;margin:10px 0}"
             ".desc{white-space:pre-line;line-height:1.6;color:#3a352f}.back{display:inline-block;margin:24px 16px 0;color:#6B6359}"
-            "@media(max-width:760px){.pp{grid-template-columns:1fr}}</style>")
+            "@media(max-width:760px){.pp{grid-template-columns:1fr;grid-template-areas:'info' 'pics' 'desc';gap:20px}}</style>")
 
     (ROOT / "p").mkdir(exist_ok=True)
     for old in (ROOT / "p").glob("*.html"):
@@ -146,9 +147,9 @@ def main():
         (ROOT / "p" / f"{lid}.html").write_text(
             f'<!doctype html><html lang="en"><head>{head}<title>{html.escape(pr["short"])} — Hustlers Bag</title>'
             f'<meta name="description" content="{html.escape(pr["desc"][:155])}">{og}</head><body>'
-            f'<a class="back" href="/">&larr; All products</a><div class="pp"><div class="pics">{imgs}</div><div>'
+            f'<a class="back" href="/">&larr; All products</a><div class="pp"><div class="pics">{imgs}</div><div class="info">'
             f'<h1>{html.escape(pr["title"])}</h1><div class="price">{pr["price"]:.2f} {pr["currency"]}</div>'
-            f'<a class="btn" href="{html.escape(pr["etsy"])}">Buy on Etsy</a>'
+            f'<a class="btn" href="{html.escape(pr["etsy"])}">Buy on Etsy</a></div><div class="more">'
             f'<p class="desc">{html.escape(pr["desc"])}</p>'
             f'<a class="btn" href="{html.escape(pr["etsy"])}">Buy on Etsy</a></div></div></body></html>', encoding="utf-8")
 
